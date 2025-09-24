@@ -7,6 +7,11 @@ A Chrome & Firefox browser extension for NetSuite that allows users to quicky fi
 
 ## Release Notes
 
+### 0.34
+- Fix an issue introduced in 2025.2 due to NetSuite modifying CSS and not allowing pointer events through.
+- Add capability to easily copy field ID (Thanks for the idea - @NewYears1978)
+- Stop displaying Standard Field type
+
 ### 0.33
 - Fix field type for custom column and custom body, which were accidentally reversed. Thanks @tofubear!
 
