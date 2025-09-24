@@ -39,7 +39,7 @@ export enum FieldType {
     CUSTOM = 'Custom Field',
     CUSTOM_BODY = 'Custom Body',
     CUSTOM_COLUMN = 'Custom Column',
-    STANDARD = 'Standard Field',
+    STANDARD = '',
     FORMULA = 'Formula Field'
 }
 
@@ -83,8 +83,6 @@ if (typeof NS != 'undefined') {
 }
 
 export function initializeFieldFinder() {
-
-    const startTime = performance.now();
 
     try {
         const settingsElement = document.getElementById('field-finder-settings') as HTMLInputElement;
@@ -605,6 +603,14 @@ export class FieldFinderDropdown {
 
 }
 
+async function copyTextToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+  }
+}
+
 export class FieldFinderDropdownOption {
     
     hidden: boolean;
@@ -614,6 +620,8 @@ export class FieldFinderDropdownOption {
     fieldId: string;
     index: number;
     fieldIdElement: HTMLSpanElement;
+    fieldIdTextElement: HTMLSpanElement;
+    fieldIdCopyElement: HTMLSpanElement;
     fieldNameElement: HTMLSpanElement;
     fieldTypeElement: HTMLSpanElement;
     dataTypeElement: HTMLSpanElement;
@@ -626,6 +634,8 @@ export class FieldFinderDropdownOption {
         this.index = index;
         this.hidden = false;
         this.fieldIdElement = document.createElement('span');
+        this.fieldIdTextElement = document.createElement('span');
+        this.fieldIdCopyElement = document.createElement('span');
         this.fieldNameElement = document.createElement('span');
         this.fieldTypeElement = document.createElement('span');
         this.dataTypeElement = document.createElement('span');
@@ -696,8 +706,44 @@ export class FieldFinderDropdownOption {
     addFieldIdElement() {
         this.fieldIdElement.classList.add('ff_option');
         this.fieldIdElement.style.setProperty('width',`${FieldAttributeWidths.fieldId}px`);
-        this.fieldIdElement.textContent = this.fieldType == 'Related Fields' ? '' : this.prettyFieldId() || '';
         this.fieldIdElement.style.visibility = this.dropdown.settings.attributes.fieldId ? 'visible': 'hidden';
+        this.fieldIdElement.classList.add('ff_copy_fieldid');
+        this.fieldIdTextElement.textContent = this.fieldType == 'Related Fields' ? '' : this.prettyFieldId() || '';
+        this.fieldIdCopyElement.classList.add('ff_copy_fieldid_icon');
+        this.fieldIdCopyElement.classList.add('ff_copy_fieldid_icon_copy');
+        this.fieldIdTextElement.classList.add('ff_copy_fieldid_text');
+        this.fieldIdElement.appendChild(this.fieldIdTextElement);
+        this.fieldIdElement.appendChild(this.fieldIdCopyElement);
+
+        if (this.fieldType == FieldType.RELATED) {
+            this.fieldIdElement.style.setProperty('pointer-events', 'none');
+        }
+        this.fieldIdElement.addEventListener('mouseenter', (event: MouseEvent) => {
+            const targetElement = event.target as HTMLElement;
+            if (targetElement) {
+                targetElement.children[1].classList.remove('ff_copy_fieldid_icon_confirm');
+                targetElement.children[1].classList.add('ff_copy_fieldid_icon_copy');
+                targetElement.children[1].classList.add('make_visible');
+            }
+        });
+
+        this.fieldIdElement.addEventListener('mouseleave', (event: MouseEvent) => {
+            const targetElement = event.target as HTMLElement;
+            if (targetElement) {
+                targetElement.children[1].classList.remove('make_visible');
+            }
+        });
+
+        this.fieldIdElement.setAttribute('onmouseup','event.preventDefault();event.stopImmediatePropagation();');
+
+        this.fieldIdElement.addEventListener('click',(event: MouseEvent)=>{
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            const targetElement = event.target as HTMLElement;
+            copyTextToClipboard(this.prettyFieldId());
+            targetElement.children[1].classList.add('ff_copy_fieldid_icon_confirm');
+        });
+
         this.element.appendChild(this.fieldIdElement);
     }
 
@@ -810,14 +856,14 @@ export class FieldFinderDropdownOption {
         if (this.fieldName && searchText != '') {
             this.fieldNameElement.innerHTML = (this.fieldName || '').replace(searchRegex, '<mark class="highlight">$&</mark>');
             if (this.fieldType != FieldType.RELATED && this.dropdown.settings.attributes.fieldId)
-                this.fieldIdElement.innerHTML = this.prettyFieldId().replace(searchRegex, '<mark class="highlight">$&</mark>');
+                this.fieldIdTextElement.innerHTML = this.prettyFieldId().replace(searchRegex, '<mark class="highlight">$&</mark>');
         }
     }
 
     resetOptionToOriginal() {
         this.fieldNameElement.innerHTML = this.fieldName || '';
         if (this.fieldType != FieldType.RELATED)
-            this.fieldIdElement.innerHTML = this.prettyFieldId();
+            this.fieldIdTextElement.textContent = this.prettyFieldId();
     }
 
     hide() {

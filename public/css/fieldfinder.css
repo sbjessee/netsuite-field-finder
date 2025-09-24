@@ -9,6 +9,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    padding: 4px;
 }
 
 .ff_multiedit::before {
@@ -90,4 +91,46 @@
 
 .ff_btn_enabled {
   background-color: #DFF1DF;
+}
+
+.ff_copy_fieldid:hover {
+  background-color: #c3d1de;
+  border-radius: 4px;
+}
+
+.ff_copy_fieldid_icon {
+  background-size: cover; /* or contain, or specific dimensions */
+  background-repeat: no-repeat;
+  background-position: right;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ff_copy_fieldid_icon_copy {
+  background-image: url("data:image/svg+xml;utf8,<svg stroke='currentColor' fill='currentColor'  stroke-width='0' viewBox='0 0 448 512' height='15px' width='15px' xmlns='http://www.w3.org/2000/svg'><path fill='white' d='M208 0L332.1 0c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9L448 336c0 26.5-21.5 48-48 48l-192 0c-26.5 0-48-21.5-48-48l0-288c0-26.5 21.5-48 48-48zM48 128l80 0 0 64-64 0 0 256 192 0 0-32 64 0 0 48c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 176c0-26.5 21.5-48 48-48z'></path></svg>");
+}
+
+.ff_copy_fieldid_icon_confirm {
+  background-image: url("data:image/svg+xml;utf8,<svg stroke='currentColor' fill='currentColor' stroke-width='0' viewBox='0 0 512 512' height='15px' width='15px' xmlns='http://www.w3.org/2000/svg'><path fill='white' d='M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z'></path></svg>");
+}
+
+.make_visible {
+  visibility: visible;
+}
+
+.ff_copy_fieldid_text {
+  width: 250px;
+  display: inline-block;
+  pointer-events: none;
+}
+
+/*
+* 2025.2 broke some things so we have to override pointer events
+* on the hover element they added.
+*/
+.dropdownDiv .dropdownNotSelected:hover::before {
+  pointer-events: none !important; /* overlay won’t block clicks */
 }
