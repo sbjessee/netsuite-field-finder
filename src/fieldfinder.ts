@@ -226,8 +226,6 @@ export class FieldFinderDropdown {
             this.multiSelect = true;
     }
 
-
-
     prepareDropdownOptions() {
         this.options = [];
         this.nsDropdown.valueArray.forEach((fieldId:string, index:number) => {
@@ -529,11 +527,8 @@ export class FieldFinderDropdown {
         const httpResponse = await fetch(url);
         if (httpResponse.status != 200)
             throw new Error(`HTTP error while retrieving related fields.`);
-
         const htmlText = await httpResponse.text();
-
         const parsedHTMLDoc = new DOMParser().parseFromString(htmlText, "text/html") || "";
-
         return {
             fields: this.getRelatedTableFields(parsedHTMLDoc), 
             labelName: this.getRelatedTableLabelName(parsedHTMLDoc)
