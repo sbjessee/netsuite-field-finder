@@ -77,6 +77,9 @@ export class MockNsMachine {
     incrementIndex() {
       this.index++;
     }
+    insertdata(fieldId:string,lineNumber:number) {
+      this.dataManager.insertLine([fieldId],lineNumber);
+    }
 };
 
 export class MockCurrentCell {
