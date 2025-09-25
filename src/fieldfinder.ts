@@ -405,7 +405,7 @@ export class FieldFinderDropdown {
         // Otherwise, delete it.
         else {
             machine.deleteline(indexOfField, true);
-       }
+        }
 
         machine.clearline(); // If we don't clear the line NS will prompt user to fill in field when they click save
         machine.buildtable(); // Rebuild the results table
