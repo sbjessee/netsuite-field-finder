@@ -30,10 +30,12 @@ export class MockNsMachine {
     index: number;
     layoutdd: any;
     postBuildTableListeners: [];
+    currentRowNum: number;
     constructor(machineName:string) {
       this.name = machineName;
       this.index = 0;
       this.postBuildTableListeners = [];
+      this.currentRowNum = 1;
     }
     dataManager = {
       lineArray: [] as string[][],
@@ -69,8 +71,14 @@ export class MockNsMachine {
     insertLine(line:string[],insertLocation:number) {
       this.dataManager.insertLine(line,insertLocation);
     }
+    setLineArrayLine(line:string[],insertLocation:number) {
+      this.dataManager.getLineArray().splice(insertLocation, 0, line);
+    }
     incrementIndex() {
       this.index++;
+    }
+    insertdata(fieldId:string,lineNumber:number) {
+      this.dataManager.insertLine([fieldId],lineNumber);
     }
 };
 

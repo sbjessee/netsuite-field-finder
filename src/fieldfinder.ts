@@ -397,18 +397,17 @@ export class FieldFinderDropdown {
         // Determine if field has already been added to return lines.
         const indexOfField = machine.dataManager.findFieldValueLineNum(fieldToSearch[machine.name],fieldId);
 
-        // If it has not, add it. Otherwise, delete it.
+        // If it has not, add it.
         if (indexOfField == -1) {
-            machine.insertLine([fieldId,'','','','','',''],machine.getLineCount()+1);
-            machine.incrementIndex();
-            machine.setMachineIndex(machine.getLineCount()+1);
+            machine.clearline(true);
+            machine.insertdata(fieldId,machine.currentRowNum);
         }
+        // Otherwise, delete it.
         else {
             machine.deleteline(indexOfField, true);
-            machine.setMachineIndex(machine.getLineCount()+1); // Set focus on last line
-            machine.clearline(); // Set focus on last line
         }
 
+        machine.clearline(); // If we don't clear the line NS will prompt user to fill in field when they click save
         machine.buildtable(); // Rebuild the results table
 
     }
